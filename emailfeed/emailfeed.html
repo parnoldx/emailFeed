@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feed</title>
+  <link rel="stylesheet" href="emailfeed.css">
+</head>
+<body>
+  <div class="container">
+    <main class="email-feed">
+      <div id="loadingIndicator" class="loading">
+        <div class="spinner"></div>
+        <p>Loading emails...</p>
+      </div>
+
+      <div id="emailContainer" class="email-container">
+        <!-- Email items will be inserted here -->
+      </div>
+
+      <div id="errorMessage" class="error-message" style="display: none;">
+        <p>Failed to load emails. Please try again.</p>
+      </div>
+    </main>
+  </div>
+
+  <script src="tracker-blocker.js"></script>
+  <script src="emailfeed.js"></script>
+</body>
+</html>

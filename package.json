@@ -1,0 +1,42 @@
+{
+  "name": "thunderbird-extension",
+  "version": "1.0.0",
+  "description": "A Thunderbird extension with build tools and development setup",
+  "main": "background.js",
+  "scripts": {
+    "build": "node build.js build",
+    "validate": "node build.js validate",
+    "dev": "npm run validate && npm run build",
+    "clean": "rimraf dist",
+    "watch": "nodemon --watch . --ext js,html,css,json --ignore dist --ignore node_modules --exec \"npm run dev\"",
+    "lint": "eslint . --ext .js --ignore-path .gitignore",
+    "lint:fix": "npm run lint -- --fix"
+  },
+  "keywords": [
+    "thunderbird",
+    "extension",
+    "email",
+    "webextension"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "archiver": "^7.0.1",
+    "eslint": "^8.57.0",
+    "fs-extra": "^11.2.0",
+    "nodemon": "^3.1.0",
+    "rimraf": "^5.0.5",
+    "web-ext": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/thunderbird-extension.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/thunderbird-extension/issues"
+  },
+  "homepage": "https://github.com/yourusername/thunderbird-extension#readme"
+}
