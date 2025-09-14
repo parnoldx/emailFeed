@@ -285,6 +285,25 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     emailContainer.classList.add('loaded');
+
+    // Apply DarkReader to newly loaded email content if dark theme is active
+    if (document.body.getAttribute('data-theme') === 'dark') {
+      if (typeof DarkReader !== 'undefined') {
+        setTimeout(() => {
+          console.log('Reprocessing email content with DarkReader');
+          try {
+            // DarkReader automatically processes new DOM content
+          } catch (error) {
+            console.error('Error reprocessing with DarkReader:', error);
+          }
+        }, 100);
+      } else {
+        // Apply fallback CSS to new content
+        setTimeout(() => {
+          applyCssToEmailContent();
+        }, 100);
+      }
+    }
   }
 
   function createEmailItemElement(message, fullMessage) {
@@ -528,10 +547,43 @@ document.addEventListener('DOMContentLoaded', async function() {
       body.setAttribute('data-theme', 'dark');
       body.classList.add('theme-dark');
       console.log('Applied dark theme');
+
+      // Enable DarkReader for email content
+      if (typeof DarkReader !== 'undefined') {
+        console.log('DarkReader is available, enabling for email content');
+        try {
+          DarkReader.enable({
+            brightness: 100,
+            contrast: 100,
+            sepia: 0
+          });
+          console.log('DarkReader enabled successfully');
+        } catch (error) {
+          console.error('Error enabling DarkReader:', error);
+          // Fallback to simple CSS approach
+          enableSimpleDarkMode();
+        }
+      } else {
+        console.warn('DarkReader not available, using fallback CSS approach');
+        // Fallback to simple CSS approach
+        enableSimpleDarkMode();
+      }
     } else {
       body.removeAttribute('data-theme');
       body.classList.remove('theme-dark');
       console.log('Applied light theme');
+
+      // Disable DarkReader for light theme
+      if (typeof DarkReader !== 'undefined') {
+        try {
+          DarkReader.disable();
+          console.log('DarkReader disabled');
+        } catch (error) {
+          console.error('Error disabling DarkReader:', error);
+        }
+      }
+      // Remove fallback CSS
+      disableSimpleDarkMode();
     }
   }
 
@@ -572,5 +624,41 @@ document.addEventListener('DOMContentLoaded', async function() {
         block: 'start'
       });
     }
+  }
+
+  // Fallback functions for when DarkReader is not available
+  function enableSimpleDarkMode() {
+    console.log('Enabling simple CSS fallback for dark mode');
+    applyCssToEmailContent();
+  }
+
+  function disableSimpleDarkMode() {
+    console.log('Disabling simple CSS fallback');
+    const existingStyle = document.getElementById('email-dark-mode-fallback');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+  }
+
+  function applyCssToEmailContent() {
+    // Remove existing fallback styles
+    const existingStyle = document.getElementById('email-dark-mode-fallback');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    // Add improved fallback CSS
+    const style = document.createElement('style');
+    style.id = 'email-dark-mode-fallback';
+    style.textContent = `
+      .email-content {
+        filter: invert(1) hue-rotate(180deg) brightness(1.1) contrast(0.9);
+      }
+      .email-content img {
+        filter: invert(1) hue-rotate(180deg);
+      }
+    `;
+    document.head.appendChild(style);
+    console.log('Applied CSS fallback for email content');
   }
 });

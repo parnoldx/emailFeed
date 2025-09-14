@@ -38,5 +38,8 @@
   "bugs": {
     "url": "https://github.com/yourusername/thunderbird-extension/issues"
   },
-  "homepage": "https://github.com/yourusername/thunderbird-extension#readme"
+  "homepage": "https://github.com/yourusername/thunderbird-extension#readme",
+  "dependencies": {
+    "darkreader": "^4.9.109"
+  }
 }

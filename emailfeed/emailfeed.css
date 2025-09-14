@@ -184,12 +184,9 @@ body {
   color: var(--tb-text-primary); /* Default text color */
 }
 
-/* Force dark text on light backgrounds inside email content, specifically for dark theme */
-[data-theme="dark"] .email-content table[bgcolor="#FFFFFF"] *,
-[data-theme="dark"] .email-content div[style*="background-color: #ffffff"] *,
-[data-theme="dark"] .email-content div[style*="background-color: white"] *,
-[data-theme="dark"] .email-content body[style*="background-color: #ffffff"] * {
-    color: #000000 !important;
+/* Basic email content readability - DarkReader will handle the rest */
+.email-content {
+  /* Let DarkReader handle most styling, just ensure basic readability */
 }
 
 .email-content a {

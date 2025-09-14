@@ -18,7 +18,7 @@ const INCLUDE_PATTERNS = [
 ];
 
 async function build() {
-  console.log('🔨 Building Thunderbird extension...');
+  console.log('🔨 Building Email Feed extension...');
   
   try {
     // Clean build directory
@@ -94,7 +94,9 @@ async function validate() {
     'background.js',
     'emailfeed/emailfeed.html',
     'emailfeed/emailfeed.js',
-    'emailfeed/emailfeed.css'
+    'emailfeed/emailfeed.css',
+    'emailfeed/darkreader.js',
+    'emailfeed/tracker-blocker.js'
   ];
   
   let valid = true;
