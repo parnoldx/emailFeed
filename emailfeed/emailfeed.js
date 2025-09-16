@@ -269,7 +269,10 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
 
   async function createEmailItems(messages) {
-    emailContainer.innerHTML = '';
+    // Clear container safely
+    while (emailContainer.firstChild) {
+      emailContainer.removeChild(emailContainer.firstChild);
+    }
 
     for (const message of messages) {
       try {
@@ -324,31 +327,77 @@ document.addEventListener('DOMContentLoaded', async function() {
       hour12: false
     });
 
-    emailItem.innerHTML = `
-      <div class="email-header">
-        <div class="email-meta">
-          <div class="email-from">${escapeHtml(message.author)}</div>
-          <div class="email-date">${date}</div>
-        </div>
-        <div class="email-subject">${escapeHtml(message.subject || 'No Subject')}</div>
-        ${message.attachments && message.attachments.length > 0 ?
-          `<div class="email-attachments">
-            <span class="attachment-icon">📎</span>
-            ${message.attachments.length} attachment${message.attachments.length > 1 ? 's' : ''}
-          </div>` : ''
-        }
-      </div>
-      <div class="email-preview">
-        <div class="email-content ${hasLongContent ? 'collapsed' : 'expanded'}" id="content-${message.id}">
-          ${emailContent}
-        </div>
-        ${hasLongContent ? `
-          <button class="read-more-btn" data-message-id="${message.id}">
-            Read More
-          </button>
-        ` : ''}
-      </div>
-    `;
+    // Create email header
+    const emailHeader = document.createElement('div');
+    emailHeader.className = 'email-header';
+
+    // Create email meta section
+    const emailMeta = document.createElement('div');
+    emailMeta.className = 'email-meta';
+
+    const emailFrom = document.createElement('div');
+    emailFrom.className = 'email-from';
+    emailFrom.textContent = message.author;
+    emailMeta.appendChild(emailFrom);
+
+    const emailDate = document.createElement('div');
+    emailDate.className = 'email-date';
+    emailDate.textContent = date;
+    emailMeta.appendChild(emailDate);
+
+    emailHeader.appendChild(emailMeta);
+
+    // Create email subject
+    const emailSubject = document.createElement('div');
+    emailSubject.className = 'email-subject';
+    emailSubject.textContent = message.subject || 'No Subject';
+    emailHeader.appendChild(emailSubject);
+
+    // Create attachments section if needed
+    if (message.attachments && message.attachments.length > 0) {
+      const emailAttachments = document.createElement('div');
+      emailAttachments.className = 'email-attachments';
+
+      const attachmentIcon = document.createElement('span');
+      attachmentIcon.className = 'attachment-icon';
+      attachmentIcon.textContent = '📎';
+      emailAttachments.appendChild(attachmentIcon);
+
+      const attachmentText = document.createTextNode(
+        ` ${message.attachments.length} attachment${message.attachments.length > 1 ? 's' : ''}`
+      );
+      emailAttachments.appendChild(attachmentText);
+
+      emailHeader.appendChild(emailAttachments);
+    }
+
+    // Create email preview section
+    const emailPreview = document.createElement('div');
+    emailPreview.className = 'email-preview';
+
+    // Create content div
+    const emailContentDiv = document.createElement('div');
+    emailContentDiv.className = `email-content ${hasLongContent ? 'collapsed' : 'expanded'}`;
+    emailContentDiv.id = `content-${message.id}`;
+
+    // Use DOMPurify to safely set HTML content
+    const cleanHTML = DOMPurify.sanitize(emailContent);
+    emailContentDiv.innerHTML = cleanHTML;
+
+    emailPreview.appendChild(emailContentDiv);
+
+    // Add read more button if needed
+    if (hasLongContent) {
+      const readMoreBtn = document.createElement('button');
+      readMoreBtn.className = 'read-more-btn';
+      readMoreBtn.setAttribute('data-message-id', message.id.toString());
+      readMoreBtn.textContent = 'Read More';
+      emailPreview.appendChild(readMoreBtn);
+    }
+
+    // Assemble the email item
+    emailItem.appendChild(emailHeader);
+    emailItem.appendChild(emailPreview);
 
     return emailItem;
   }
@@ -410,9 +459,11 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
 
   function escapeHtml(text) {
+    if (!text) return '';
     const div = document.createElement('div');
     div.textContent = text;
-    return div.innerHTML;
+    // Use DOMPurify to sanitize the result
+    return DOMPurify.sanitize(div.innerHTML);
   }
 
   function showLoading() {
@@ -439,12 +490,25 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   function showNoEmails() {
     hideLoading();
-    emailContainer.innerHTML = `
-      <div class="no-emails">
-        <h2>📭 No Emails Found</h2>
-        <p>Your Feed folder appears to be empty.</p>
-      </div>
-    `;
+
+    // Clear container safely
+    while (emailContainer.firstChild) {
+      emailContainer.removeChild(emailContainer.firstChild);
+    }
+
+    // Create no emails message
+    const noEmailsDiv = document.createElement('div');
+    noEmailsDiv.className = 'no-emails';
+
+    const heading = document.createElement('h2');
+    heading.textContent = '📭 No Emails Found';
+    noEmailsDiv.appendChild(heading);
+
+    const paragraph = document.createElement('p');
+    paragraph.textContent = 'Your Feed folder appears to be empty.';
+    noEmailsDiv.appendChild(paragraph);
+
+    emailContainer.appendChild(noEmailsDiv);
     emailContainer.classList.add('loaded');
   }
 

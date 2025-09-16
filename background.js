@@ -88,30 +88,13 @@ browser.menus.onClicked.addListener((info, tab) => {
 
 async function getCurrentlySelectedFolder() {
   try {
-    // Get the current Thunderbird main window tab
-    const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-
-    if (tabs.length === 0) {
-      console.log('No active tab found');
+    const mailTabs = await browser.mailTabs.query({ active: true, currentWindow: true });
+    if (mailTabs.length === 0) {
+      console.log('No active mailTab found');
       return null;
     }
-
-    // Try to get the displayed folder from the main window
-    // This approach tries to access Thunderbird's internal state
-    // Note: This may have limited access depending on Thunderbird version
-
-    try {
-      const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-      if (tabs.length > 0 && tabs[0].mailTab && tabs[0].folder) {
-        const mailTab = tabs[0];
-        console.log('Found displayed folder via tabs.query:', mailTab.folder);
-        return mailTab.folder;
-      }
-    } catch (error) {
-      console.log('tabs.query API not available or failed:', error);
-    }
-    return null;
-
+    // The displayedFolder property contains a MailFolder object of the displayed folder.
+    return mailTabs[0].displayedFolder;
   } catch (error) {
     console.error('Error in getCurrentlySelectedFolder:', error);
     return null;
@@ -140,18 +123,3 @@ function openFeedForFolder(folder) {
     console.error('Error creating feed tab:', error);
   });
 }
-
-// Extension lifecycle events
-browser.runtime.onInstalled.addListener((details) => {
-  console.log('Extension installed:', details);
-  
-  // Initialize default settings
-  browser.storage.local.set({
-    extensionVersion: '1.0.0',
-    installDate: new Date().toISOString()
-  });
-});
-
-browser.runtime.onStartup.addListener(() => {
-  console.log('Extension startup');
-});

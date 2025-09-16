@@ -12,9 +12,7 @@ const INCLUDE_PATTERNS = [
   'manifest.json',
   'background.js',
   'emailfeed/**/*',
-  'icons/**/*',
-  '!**/.DS_Store',
-  '!**/Thumbs.db'
+  'icons/**/*'
 ];
 
 async function build() {

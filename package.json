@@ -1,7 +1,7 @@
 {
-  "name": "thunderbird-extension",
-  "version": "1.0.0",
-  "description": "A Thunderbird extension with build tools and development setup",
+  "name": "email-feed",
+  "version": "1.0.1",
+  "description": "Show the emails of a folder as Feed",
   "main": "background.js",
   "scripts": {
     "build": "node build.js build",
@@ -18,7 +18,7 @@
     "email",
     "webextension"
   ],
-  "author": "Your Name",
+  "author": "parnoldx",
   "license": "MIT",
   "devDependencies": {
     "archiver": "^7.0.1",
@@ -33,12 +33,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/thunderbird-extension.git"
+    "url": "git+https://github.com/parnoldx/emailFeed.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/thunderbird-extension/issues"
+    "url": "https://github.com/parnoldx/emailFeed/issues"
   },
-  "homepage": "https://github.com/yourusername/thunderbird-extension#readme",
+  "homepage": "https://github.com/parnoldx/emailFeed",
   "dependencies": {
     "darkreader": "^4.9.109"
   }

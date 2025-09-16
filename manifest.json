@@ -15,9 +15,7 @@
   "permissions": [
     "accountsRead",
     "messagesRead",
-    "tabs",
-    "menus",
-    "activeTab"
+    "menus"
   ],
 
   "background": {
@@ -33,10 +31,6 @@
     "128": "icons/icon-128.png"
   },
 
-  "web_accessible_resources": [
-    "icons/*",
-    "emailfeed/*"
-  ],
 
   "commands": {
     "open-feed": {

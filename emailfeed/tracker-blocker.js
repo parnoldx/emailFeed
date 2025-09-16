@@ -392,7 +392,8 @@ function blockTrackersInHTML(htmlContent) {
     }
   });
 
-  return tempDiv.innerHTML;
+  // Use DOMPurify to safely return the cleaned HTML
+  return DOMPurify.sanitize(tempDiv.innerHTML);
 }
 
 // Export functions for use in other modules
